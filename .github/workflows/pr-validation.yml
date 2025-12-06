@@ -1,0 +1,71 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Cache PlatformIO
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.platformio
+          .pio
+        key: ${{ runner.os }}-pio-${{ hashFiles('**/platformio.ini') }}
+        restore-keys: |
+          ${{ runner.os }}-pio-
+    
+    - name: Install PlatformIO
+      run: |
+        python -m pip install --upgrade pip
+        pip install platformio
+    
+    - name: Check code compiles
+      run: |
+        platformio run
+    
+    - name: Verify version header exists
+      run: |
+        if [ ! -f "include/version.h" ]; then
+          echo "Error: version.h not found"
+          exit 1
+        fi
+        echo "✓ version.h found"
+    
+    - name: Check for config file
+      run: |
+        if [ ! -f "src/config.h.example" ]; then
+          echo "Warning: config.h.example not found"
+        else
+          echo "✓ config.h.example found"
+        fi
+    
+    - name: Validate platformio.ini
+      run: |
+        if ! grep -q "platform = espressif32" platformio.ini; then
+          echo "Error: Invalid platformio.ini"
+          exit 1
+        fi
+        echo "✓ platformio.ini is valid"
+    
+    - name: PR validation summary
+      run: |
+        echo "========================================="
+        echo "PR Validation Complete ✓"
+        echo "========================================="
+        echo "Build: Success"
+        echo "Version header: Present"
+        echo "Configuration: Valid"
+        echo "========================================="
