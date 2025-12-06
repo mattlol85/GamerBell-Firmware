@@ -57,6 +57,10 @@ void setupOTA() {
     ArduinoOTA.setHostname(hostname);
     ArduinoOTA.setPassword(OTA_PASSWORD);
     
+    #ifdef OTA_PORT
+    ArduinoOTA.setPort(OTA_PORT);
+    #endif
+    
     ArduinoOTA.onStart([]() {
         String type;
         if (ArduinoOTA.getCommand() == U_FLASH) {
@@ -72,7 +76,9 @@ void setupOTA() {
     });
     
     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+        if (total > 0) {
+            Serial.printf("Progress: %u%%\r", (progress * 100) / total);
+        }
     });
     
     ArduinoOTA.onError([](ota_error_t error) {
