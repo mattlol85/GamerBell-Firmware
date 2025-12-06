@@ -3,12 +3,23 @@
 #include <ArduinoOTA.h>
 #include "version.h"
 
-// WiFi credentials - update these for your network
-const char* ssid = "YOUR_SSID";
-const char* password = "YOUR_PASSWORD";
+// Include config file if it exists, otherwise use example values
+#ifdef CONFIG_H
+#include "config.h"
+#else
+#warning "config.h not found - using defaults. Copy config.h.example to config.h and configure your settings!"
+#define WIFI_SSID "YOUR_SSID"
+#define WIFI_PASSWORD "YOUR_PASSWORD"
+#define DEVICE_HOSTNAME "GamerBell"
+#define OTA_PASSWORD "admin"
+#endif
+
+// WiFi credentials from config
+const char* ssid = WIFI_SSID;
+const char* password = WIFI_PASSWORD;
 
 // Device configuration
-const char* hostname = "GamerBell";
+const char* hostname = DEVICE_HOSTNAME;
 
 void setupWiFi() {
     Serial.println("Connecting to WiFi...");
@@ -16,19 +27,35 @@ void setupWiFi() {
     WiFi.setHostname(hostname);
     WiFi.begin(ssid, password);
     
-    while (WiFi.status() != WL_CONNECTED) {
+    // Wait for connection with timeout
+    int attempts = 0;
+    const int maxAttempts = 30; // 15 seconds timeout
+    
+    while (WiFi.status() != WL_CONNECTED && attempts < maxAttempts) {
         delay(500);
         Serial.print(".");
+        attempts++;
     }
     
-    Serial.println("\nWiFi connected!");
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("\nWiFi connected!");
+        Serial.print("IP address: ");
+        Serial.println(WiFi.localIP());
+    } else {
+        Serial.println("\nWiFi connection failed!");
+        Serial.println("Please check your credentials in config.h");
+    }
 }
 
 void setupOTA() {
+    // Only setup OTA if WiFi is connected
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Skipping OTA setup - WiFi not connected");
+        return;
+    }
+    
     ArduinoOTA.setHostname(hostname);
-    ArduinoOTA.setPassword("admin");  // Change this for security
+    ArduinoOTA.setPassword(OTA_PASSWORD);
     
     ArduinoOTA.onStart([]() {
         String type;

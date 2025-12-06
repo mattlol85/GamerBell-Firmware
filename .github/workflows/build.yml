@@ -50,11 +50,19 @@ jobs:
         echo "GIT_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         echo "Building version: $VERSION"
     
+    - name: Prepare config for build
+      run: |
+        # Use example config if config.h doesn't exist (for CI builds)
+        if [ ! -f src/config.h ]; then
+          echo "Using example config for CI build"
+          cp src/config.h.example src/config.h
+        fi
+    
     - name: Build firmware
       run: |
         platformio run
       env:
-        PLATFORMIO_BUILD_FLAGS: -D GIT_COMMIT=\"${{ steps.version.outputs.GIT_COMMIT }}\"
+        PLATFORMIO_BUILD_FLAGS: -D GIT_COMMIT=\"${{ steps.version.outputs.GIT_COMMIT }}\" -D CONFIG_H
     
     - name: Rename firmware binary
       run: |

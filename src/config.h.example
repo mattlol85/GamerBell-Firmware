@@ -1,8 +1,14 @@
+// Configuration file for GamerBell Firmware
+// Copy this file to config.h and update with your settings
+//
+// IMPORTANT: config.h is gitignored to prevent accidentally committing credentials
+// This example file shows the available configuration options
+
 #ifndef CONFIG_H
 #define CONFIG_H
 
 // WiFi Configuration
-// Copy this file to config.h and update with your settings
+// Replace with your WiFi network credentials
 #define WIFI_SSID "YOUR_SSID"
 #define WIFI_PASSWORD "YOUR_PASSWORD"
 
@@ -10,11 +16,12 @@
 #define DEVICE_HOSTNAME "GamerBell"
 
 // OTA Configuration
-#define OTA_PASSWORD "admin"  // CHANGE THIS FOR SECURITY!
+// IMPORTANT: Change the default password for security!
+#define OTA_PASSWORD "your_secure_password_here"
 #define OTA_PORT 3232
 
-// Network Configuration
-// Static IP configuration (optional, comment out for DHCP)
+// Network Configuration (Optional)
+// Uncomment to use static IP instead of DHCP
 // #define USE_STATIC_IP
 // #define STATIC_IP "192.168.1.100"
 // #define GATEWAY "192.168.1.1"

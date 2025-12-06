@@ -32,9 +32,19 @@ jobs:
         python -m pip install --upgrade pip
         pip install platformio
     
+    - name: Prepare config for build
+      run: |
+        # Use example config if config.h doesn't exist
+        if [ ! -f src/config.h ]; then
+          echo "Using example config for CI build"
+          cp src/config.h.example src/config.h
+        fi
+    
     - name: Check code compiles
       run: |
         platformio run
+      env:
+        PLATFORMIO_BUILD_FLAGS: -D CONFIG_H
     
     - name: Verify version header exists
       run: |

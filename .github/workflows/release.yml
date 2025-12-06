@@ -60,6 +60,14 @@ jobs:
         
         echo "Building release version: $VERSION"
     
+    - name: Prepare config for build
+      run: |
+        # Use example config if config.h doesn't exist (for CI builds)
+        if [ ! -f src/config.h ]; then
+          echo "Using example config for CI build"
+          cp src/config.h.example src/config.h
+        fi
+    
     - name: Build firmware with version
       run: |
         platformio run
@@ -69,6 +77,7 @@ jobs:
           -D VERSION_MINOR=${{ steps.version.outputs.MINOR }}
           -D VERSION_PATCH=${{ steps.version.outputs.PATCH }}
           -D GIT_COMMIT=\"${{ steps.version.outputs.GIT_COMMIT }}\"
+          -D CONFIG_H
     
     - name: Prepare release artifacts
       run: |
