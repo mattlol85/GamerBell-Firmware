@@ -178,7 +178,7 @@ upload_port = 192.168.1.100  ; Your device IP
 
 ## 📄 License
 
-[Add your license here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 
