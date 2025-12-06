@@ -3,8 +3,8 @@
 #include <ArduinoOTA.h>
 #include "version.h"
 
-// Include config file if it exists, otherwise use example values
-#ifdef CONFIG_H
+// Try to include config file, provide defaults if not available
+#if __has_include("config.h")
 #include "config.h"
 #else
 #warning "config.h not found - using defaults. Copy config.h.example to config.h and configure your settings!"

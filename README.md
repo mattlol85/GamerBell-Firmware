@@ -41,16 +41,23 @@ platformio device monitor
 
 ### Configuration
 
-1. Update WiFi credentials in `src/main.cpp`:
-   ```cpp
-   const char* ssid = "YOUR_SSID";
-   const char* password = "YOUR_PASSWORD";
+1. Create your configuration file:
+   ```bash
+   cp src/config.h.example src/config.h
    ```
 
-2. Update the OTA password for security:
+2. Update WiFi credentials in `src/config.h`:
    ```cpp
-   ArduinoOTA.setPassword("your_secure_password");
+   #define WIFI_SSID "YOUR_SSID"
+   #define WIFI_PASSWORD "YOUR_PASSWORD"
    ```
+
+3. Update the OTA password for security:
+   ```cpp
+   #define OTA_PASSWORD "your_secure_password"
+   ```
+
+**Note:** `config.h` is gitignored to prevent accidentally committing credentials.
 
 ### Performing OTA Update
 

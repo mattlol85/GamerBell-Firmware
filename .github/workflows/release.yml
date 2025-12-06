@@ -77,7 +77,6 @@ jobs:
           -D VERSION_MINOR=${{ steps.version.outputs.MINOR }}
           -D VERSION_PATCH=${{ steps.version.outputs.PATCH }}
           -D GIT_COMMIT=\"${{ steps.version.outputs.GIT_COMMIT }}\"
-          -D CONFIG_H
     
     - name: Prepare release artifacts
       run: |

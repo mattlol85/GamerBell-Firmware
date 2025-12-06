@@ -62,7 +62,7 @@ jobs:
       run: |
         platformio run
       env:
-        PLATFORMIO_BUILD_FLAGS: -D GIT_COMMIT=\"${{ steps.version.outputs.GIT_COMMIT }}\" -D CONFIG_H
+        PLATFORMIO_BUILD_FLAGS: -D GIT_COMMIT=\"${{ steps.version.outputs.GIT_COMMIT }}\"
     
     - name: Rename firmware binary
       run: |

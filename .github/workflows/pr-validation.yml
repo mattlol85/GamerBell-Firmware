@@ -43,8 +43,6 @@ jobs:
     - name: Check code compiles
       run: |
         platformio run
-      env:
-        PLATFORMIO_BUILD_FLAGS: -D CONFIG_H
     
     - name: Verify version header exists
       run: |
